@@ -38,7 +38,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 
 @implementation KalViewController
 
-@synthesize dataSource, delegate, initialDate, selectedDate;
+@synthesize dataSource, delegate, initialDate, selectedDate, showMultipleMarkers;
 
 - (id)initWithSelectedDate:(NSDate *)date
 {
@@ -132,7 +132,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
   for (int i=0; i<[dates count]; i++)
     [dates replaceObjectAtIndex:i withObject:[KalDate dateFromNSDate:[dates objectAtIndex:i]]];
   
-  [[self calendarView] markTilesForDates:dates];
+  [[self calendarView] markTilesForDates:dates showMultipleMarkers:self.showMultipleMarkers];
   [self didSelectDate:self.calendarView.selectedDate];
 }
 

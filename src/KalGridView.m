@@ -240,7 +240,7 @@ static NSString *kSlideAnimationId = @"KalSwitchMonths";
   [self slide:SLIDE_NONE];
 }
 
-- (void)markTilesForDates:(NSArray *)dates { [frontMonthView markTilesForDates:dates]; }
+- (void)markTilesForDates:(NSArray *)dates showMultipleMarkers:(BOOL)showMultipleMarkers { [frontMonthView markTilesForDates:dates showMultipleMarkers:showMultipleMarkers]; }
 
 - (KalDate *)selectedDate { return selectedTile.date; }
 

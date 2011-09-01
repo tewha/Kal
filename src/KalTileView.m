@@ -9,9 +9,13 @@
 
 extern const CGSize kTileSize;
 
+static const NSUInteger maxMarkers = 4;
+static const CGFloat markerPadding =  1.0f;
+static const CGFloat markerSize  = 4.0f;
+
 @implementation KalTileView
 
-@synthesize date;
+@synthesize date, numMarkers;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -63,8 +67,17 @@ extern const CGSize kTileSize;
     markerImage = [UIImage imageNamed:@"Kal.bundle/kal_marker.png"];
   }
   
-  if (flags.marked)
-    [markerImage drawInRect:CGRectMake(21.f, 5.f, 4.f, 5.f)];
+  
+  if (self.numMarkers) {
+      
+      CGFloat count = (self.numMarkers<maxMarkers)?self.numMarkers:maxMarkers;
+      CGFloat mid = rect.size.width/2,midy=5.0f;
+      for (NSUInteger i=0;i<count;i++) {
+          
+          CGFloat xOffset = ((1-count)/2+i)*(markerSize+markerPadding);
+          [markerImage drawInRect:CGRectMake(mid+xOffset-markerSize/2,midy, markerSize, markerSize)];
+      }
+  }    
   
   NSUInteger n = [self.date day];
   NSString *dayText = [NSString stringWithFormat:@"%lu", (unsigned long)n];
@@ -100,7 +113,7 @@ extern const CGSize kTileSize;
   flags.type = KalTileTypeRegular;
   flags.highlighted = NO;
   flags.selected = NO;
-  flags.marked = NO;
+  numMarkers = 0;  
 }
 
 - (void)setDate:(KalDate *)aDate
@@ -148,17 +161,6 @@ extern const CGSize kTileSize;
     return;
   
   flags.highlighted = highlighted;
-  [self setNeedsDisplay];
-}
-
-- (BOOL)isMarked { return flags.marked; }
-
-- (void)setMarked:(BOOL)marked
-{
-  if (flags.marked == marked)
-    return;
-  
-  flags.marked = marked;
   [self setNeedsDisplay];
 }
 

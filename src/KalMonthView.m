@@ -91,10 +91,23 @@ extern const CGSize kTileSize;
   self.height = 1.f + kTileSize.height * numWeeks;
 }
 
-- (void)markTilesForDates:(NSArray *)dates
+- (void)markTilesForDates:(NSArray *)dates showMultipleMarkers:(BOOL)showMultipleMarkers
 {
-  for (KalTileView *tile in self.subviews)
-    tile.marked = [dates containsObject:tile.date];
+    for (KalTileView *tile in self.subviews) {
+        
+        if(!showMultipleMarkers) {
+            
+            tile.numMarkers = [dates containsObject:tile.date];
+        } else {    
+            
+            NSUInteger count = 0;
+            for (KalDate *date in dates) {
+                if([date compare:tile.date]==NSOrderedSame)
+                   count= count+1;
+            }
+            tile.numMarkers = count;
+        }
+    }    
 }
 
 @end

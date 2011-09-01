@@ -28,8 +28,11 @@
   id <KalDataSource> dataSource;
   NSDate *initialDate;                    // The date that the calendar was initialized with *or* the currently selected date when the view hierarchy was torn down in order to satisfy a low memory warning.
   NSDate *selectedDate;                   // I cache the selected date because when we respond to a memory warning, we cannot rely on the view hierarchy still being alive, and thus we cannot always derive the selected date from KalView's selectedDate property.
+  BOOL showMultipleMarkers;              // When this boolean flag is set we will show multiple markers(to a certain maximum number of markers defined in KalTileView)corresponding to the number of dates for that tile.If the flag is not set we will show only one marker.
+  
 }
 
+@property (nonatomic, assign) BOOL showMultipleMarkers;
 @property (nonatomic, assign) id<UITableViewDelegate> delegate;
 @property (nonatomic, assign) id<KalDataSource> dataSource;
 @property (nonatomic, retain, readonly) NSDate *selectedDate;
