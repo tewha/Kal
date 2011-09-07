@@ -32,13 +32,9 @@ static const CGFloat markerSize  = 4.0f;
 - (void)drawRect:(CGRect)rect
 {
   CGContextRef ctx = UIGraphicsGetCurrentContext();
-  CGFloat fontSize = 24.f;
-  UIFont *font = [UIFont boldSystemFontOfSize:fontSize];
   UIColor *shadowColor = nil;
   UIColor *textColor = nil;
   UIImage *markerImage = nil;
-  CGContextSelectFont(ctx, [font.fontName cStringUsingEncoding:NSUTF8StringEncoding], fontSize, kCGEncodingMacRoman);
-      
   CGContextTranslateCTM(ctx, 0, kTileSize.height);
   CGContextScaleCTM(ctx, 1, -1);
   
@@ -66,19 +62,40 @@ static const CGFloat markerSize  = 4.0f;
     shadowColor = [UIColor whiteColor];
     markerImage = [UIImage imageNamed:@"Kal.bundle/kal_marker.png"];
   }
-  
-  
+    
+    
   if (self.numMarkers) {
-      
-      CGFloat count = (self.numMarkers<maxMarkers)?self.numMarkers:maxMarkers;
-      CGFloat mid = rect.size.width/2,midy=5.0f;
-      for (NSUInteger i=0;i<count;i++) {
+     
+      if(self.numMarkers<=maxMarkers) {
           
-          CGFloat xOffset = ((1-count)/2+i)*(markerSize+markerPadding);
-          [markerImage drawInRect:CGRectMake(mid+xOffset-markerSize/2,midy, markerSize, markerSize)];
+          CGFloat midx = rect.size.width/2,midy=5.0f;
+          for (NSUInteger i=0;i<self.numMarkers;i++) {
+              
+              CGFloat xOffset = ((1-(CGFloat)self.numMarkers)/2+i)*(markerSize+markerPadding); 
+              [markerImage drawInRect:CGRectMake(midx+xOffset-markerSize/2,midy, markerSize, markerSize)];
+          }
+      }  else {
+         
+          NSString* numEventsText = [NSString stringWithFormat:@"(%lu)", (unsigned long)self.numMarkers];
+          const char *events = [numEventsText cStringUsingEncoding:NSUTF8StringEncoding];
+          CGFloat eventsFontSize = 8.0f;
+          UIFont *numEventsFont = [UIFont boldSystemFontOfSize:eventsFontSize];
+          CGSize eventsTextSize = [numEventsText sizeWithFont:numEventsFont];
+          CGFloat midx = roundf(0.5f * (kTileSize.width - eventsTextSize.width)),midy = 5.0f;
+          CGContextSelectFont(ctx, [numEventsFont.fontName cStringUsingEncoding:NSUTF8StringEncoding],eventsFontSize, kCGEncodingMacRoman);
+          
+          if (shadowColor) {
+              [shadowColor setFill];
+              CGContextShowTextAtPoint(ctx, midx, midy,events,self.numMarkers>= 10 ? 4 : 3);
+          }
+          [textColor setFill];
+          CGContextShowTextAtPoint(ctx, midx, midy,events,self.numMarkers>= 10 ? 4 : 3);
       }
   }    
   
+  CGFloat fontSize = 24.f;
+  UIFont *font = [UIFont boldSystemFontOfSize:fontSize];
+  CGContextSelectFont(ctx, [font.fontName cStringUsingEncoding:NSUTF8StringEncoding], fontSize, kCGEncodingMacRoman);
   NSUInteger n = [self.date day];
   NSString *dayText = [NSString stringWithFormat:@"%lu", (unsigned long)n];
   const char *day = [dayText cStringUsingEncoding:NSUTF8StringEncoding];
