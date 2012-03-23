@@ -59,7 +59,7 @@ NSString *const KalDataSourceChangedNotification = @"KalDataSourceChangedNotific
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    if ([super initWithCoder:aDecoder]) {
+    if ((self = [super initWithCoder:aDecoder])) {
         [self setupWithDate:[NSDate date]];
     }
     return self;
