@@ -24,6 +24,8 @@ static const CGFloat markerSize  = 4.0f;
     self.backgroundColor = [UIColor clearColor];
     self.clipsToBounds = NO;
     origin = frame.origin;
+    [self setIsAccessibilityElement:YES];
+    [self setAccessibilityTraits:UIAccessibilityTraitButton];
     [self resetState];
   }
   return self;

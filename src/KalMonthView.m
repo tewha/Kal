@@ -19,6 +19,8 @@ extern const CGSize kTileSize;
 - (id)initWithFrame:(CGRect)frame
 {
   if ((self = [super initWithFrame:frame])) {
+    tileAccessibilityFormatter = [[NSDateFormatter alloc] init];
+    [tileAccessibilityFormatter setDateFormat:@"EEEE, MMMM d"];
     self.opaque = NO;
     self.clipsToBounds = YES;
     for (int i=0; i<6; i++) {
@@ -93,21 +95,39 @@ extern const CGSize kTileSize;
 
 - (void)markTilesForDates:(NSArray *)dates showMultipleMarkers:(BOOL)showMultipleMarkers
 {
-    for (KalTileView *tile in self.subviews) {
-        
-        if(!showMultipleMarkers) {
+  for (KalTileView *tile in self.subviews) {
+  
+  if(!showMultipleMarkers) {
             
-            tile.numMarkers = [dates containsObject:tile.date];
-        } else {    
-            
-            NSUInteger count = 0;
-            for (KalDate *date in dates) {
-                if([date compare:tile.date]==NSOrderedSame)
-                   count= count+1;
-            }
-            tile.numMarkers = count;
-        }
-    }    
+    tile.numMarkers = [dates containsObject:tile.date];
+  } else {
+    
+    NSUInteger count = 0;
+    for (KalDate *date in dates) {
+      if([date compare:tile.date]==NSOrderedSame)
+        count = count+1;
+      }
+      tile.numMarkers = count;
+    }
+    NSString *dayString = [tileAccessibilityFormatter stringFromDate:[tile.date NSDate]];
+    if (dayString) {
+        NSMutableString *helperText = [[[NSMutableString alloc] initWithCapacity:128] autorelease];
+        if ([tile.date isToday])
+            [helperText appendFormat:@"%@ ", NSLocalizedString(@"Today", @"Accessibility text for a day tile that represents today")];
+        [helperText appendString:dayString];
+        if (tile.numMarkers)
+            [helperText appendFormat:@". %@", NSLocalizedString(@"Marked", @"Accessibility text for a day tile which is marked with a small dot")];
+        [tile setAccessibilityLabel:helperText];
+      }
+  }
+}
+
+#pragma mark -
+
+- (void)dealloc
+{
+  [tileAccessibilityFormatter release];
+  [super dealloc];
 }
 
 @end
