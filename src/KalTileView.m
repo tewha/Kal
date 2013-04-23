@@ -31,6 +31,14 @@ static const CGFloat markerSize  = 4.0f;
   return self;
 }
 
+- (void)setNumMarkers:(NSUInteger)newNumMarkers
+{
+  if (numMarkers != newNumMarkers) {
+    numMarkers = newNumMarkers;
+    [self setNeedsDisplay];
+  }
+}
+
 - (void)drawRect:(CGRect)rect
 {
   CGContextRef ctx = UIGraphicsGetCurrentContext();
